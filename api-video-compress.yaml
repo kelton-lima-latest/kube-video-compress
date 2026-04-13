@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: api-video-compress
+  name: api-video-compress
+  namespace: video-compress
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: api-video-compress
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: api-video-compress
+    spec:
+      containers:
+      - image: ragtlima/api-video-compressor:0.1.0-alpha
+        name: api-video-compressor
+        # --- MODO DEBUG: Força o pod a ficar vivo para inspeção ---
+        command: ["sleep"]
+        args: ["3600"]
+        # ---------------------------------------------------------
+        env:
+        - name: REDIS_HOST
+          value: "redis-video-compress"
+        - name: REDIS_PORT
+          value: "6379"
+        envFrom:
+        - secretRef:
+            name: secrets-video-compress
+        ports:
+        - containerPort: 9000
+        resources:
+          limits:
+            cpu: "0.5"
+            memory: "256Mi"
+          requests:
+            cpu: "0.2"
+            memory: "128Mi"
