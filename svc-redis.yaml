@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2026-04-12T02:52:08Z"
+  labels:
+    app: redis
+  name: redis
+  namespace: video-compress
+  resourceVersion: "1395848"
+  uid: 6317bc27-5ec8-4838-b92e-ae99acdb2703
+spec:
+  clusterIP: 10.96.198.31
+  clusterIPs:
+  - 10.96.198.31
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - port: 6379
+    protocol: TCP
+    targetPort: 6379
+  selector:
+    app: redis
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
