@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: db-video-compress
+  namespace: video-compress
+subsets:
+  - addresses:
+      - ip: 10.12.93.93
+    ports:
+      - port: 5432
