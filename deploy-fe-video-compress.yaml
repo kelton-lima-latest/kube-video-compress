@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: fe-video-compress
+  name: fe-video-compress
+  namespace: video-compress
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fe-video-compress
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: fe-video-compress
+    spec:
+      containers:
+      - image: ragtlima/frontend-video-compressor:0.1.0-alpha
+        name: fe-video-compress
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 0.3
+            memory: 64Mi
+          limits:
+            cpu: 0.5
+            memory: 128Mi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
